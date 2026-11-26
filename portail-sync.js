@@ -17,7 +17,7 @@
   const valeur = e => String(e.value ?? '').slice(0, 4000);
 
   const badge = document.createElement('div');
-  badge.setAttribute('role', 'status');
+  badge.id = 'portail-sync'; badge.setAttribute('role', 'status');
   Object.assign(badge.style, { position: 'fixed', left: '12px', bottom: '12px', zIndex: 2147483000, maxWidth: 'min(360px, calc(100vw - 24px))',
     font: '12px/1.4 system-ui, sans-serif', background: '#25221e', color: '#f7f3e9', padding: '8px 11px', borderLeft: '4px solid #f6ad42',
     boxShadow: '0 2px 8px rgba(0,0,0,.25)' });
