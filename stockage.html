@@ -20,4 +20,5 @@ function pack(){let p=g('pack-mode').value==='packed',arr=p?['10101011','1100000
 function comp(){let r=num('comp-rate'),t=num('comp-time'),pcm=44100*16*2;set('comp-rate-out',r+' kbit/s');set('comp-time-out',t+' s');set('comp-pcm',fmt(pcm*t/8e6,3)+' Mo');set('comp-size',fmt(r*1000*t/8e6,3)+' Mo');set('comp-ratio',fmt(pcm/(1000*r),2)+' ×')}
 watch(['mem-fe','mem-n','mem-c','mem-t','mem-pack','mem-cap'],mem);watch(['pack-mode'],pack);watch(['comp-rate','comp-time'],comp);mem();pack();comp();
 
-initSave('can-lab-stockage-v1','can-lab-stockage-v1');})();</script></body></html>
+initSave('can-lab-stockage-v1','can-lab-stockage-v1');})();</script><script src="portail-sync.js" defer></script>
+</body></html>
