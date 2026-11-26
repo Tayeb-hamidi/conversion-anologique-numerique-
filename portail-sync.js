@@ -65,7 +65,9 @@
       for (const c of champs()) {
         const s = serveur[c.id], v = valeur(c), vierge = v === '' || v === String(c.defaultValue ?? '');
         if (s !== undefined && s !== v && vierge) { c.value = s; c.dispatchEvent(new Event('input', { bubbles: true })); c.dispatchEvent(new Event('change', { bubbles: true })); }
-        else if (!vierge && s !== v) local[c.id] = v;   // travail fait hors connexion : envoye au compte
+        // travail fait hors connexion (vraies reponses seulement : les curseurs et menus regles par la page ne partent
+        // que si l'eleve les touche) : envoye au compte
+        else if (!vierge && s !== v && v.trim() !== '' && (c.matches('[data-answer]') || c.tagName === 'TEXTAREA')) local[c.id] = v;
       }
       restauration = false;
       const n = Object.keys(serveur).length;
