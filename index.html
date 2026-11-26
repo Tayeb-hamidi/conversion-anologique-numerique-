@@ -25,11 +25,25 @@ footer{border-top:2px dashed #b9ad99;padding:16px 0;font-size:12px;color:#594b3c
 
 /* V22.1 — largeur fluide sur ordinateur, règles mobiles inchangées. */
 @media screen and (min-width:761px){body{width:100%;max-width:none;margin-inline:0;padding-inline:clamp(12px,1.5vw,24px)}}
+
+/* V1.6 — sabliers granulaires, animation décorative sans dépendance. */
+.hero-grid{display:grid;grid-template-columns:minmax(105px,190px) minmax(0,1fr) minmax(105px,190px);align-items:center;gap:clamp(16px,3vw,48px)}
+.hero-copy{text-align:center;min-width:0}.hero-copy h1{max-width:22ch;margin:0 auto 18px;font-size:clamp(32px,4vw,70px)}.hero-copy .eyebrow{margin-bottom:20px}.hero-copy>p{margin:0 auto 22px;max-width:60ch;color:#e7ddc7}.hero-copy .btn{display:inline-block;width:auto;text-align:center;box-shadow:3px 3px 0 #b98234}
+.hourglass{margin:0;display:grid;justify-items:center;gap:8px;min-width:0}.hourglass canvas{width:100%;max-width:170px;height:auto;display:block}.hourglass figcaption{font-size:10px;letter-spacing:1.6px;color:#c1b6a2;text-align:center}.motion-toggle{position:relative;display:block;margin:20px auto 0;border:1px solid #827464;background:transparent;color:#e7ddc7;padding:6px 12px;font:11px/1.5 inherit;cursor:pointer}.motion-toggle:hover{border-color:#f6ad42}.motion-toggle:focus-visible{outline:2px solid #f6ad42;outline-offset:3px}
+@media(max-width:760px){header{padding:24px 12px}.hero-grid{grid-template-columns:minmax(44px,80px) minmax(0,1fr) minmax(44px,80px);gap:8px}.hero-copy h1{font-size:clamp(22px,5.6vw,36px);letter-spacing:-1px}.hero-copy .eyebrow{font-size:9px;letter-spacing:1px;margin-bottom:12px}.hero-copy>p{font-size:12px;line-height:1.5}.hero-copy .btn{font-size:11px;padding:8px;box-shadow:none}.hourglass figcaption{font-size:8px;letter-spacing:0}.motion-toggle{margin-top:12px}.hero-grid .hourglass canvas{max-width:80px}}
+@media(prefers-reduced-motion:reduce){.motion-toggle{display:none}}
+
 </style>
 </head>
 <body>
-<header><p class="eyebrow">SKILLBEAM · SCIENCES &amp; TECHNOLOGIES</p><h1>Laboratoire pédagogique</h1><p>Expérimenter, observer, comprendre. Retrouvez les séquences pédagogiques et leurs activités interactives.</p></header>
-<main>
+<header>
+<div class="hero-grid">
+<figure class="hourglass"><canvas id="sand-left" width="240" height="340" aria-hidden="true"></canvas><figcaption>01 / OBSERVER</figcaption></figure>
+<div class="hero-copy"><p class="eyebrow">SKILLBEAM · SCIENCES &amp; TECHNOLOGIES</p><h1>Laboratoire<br>pédagogique<span style="color:#f6ad42">.</span></h1><p>Expérimenter, observer, comprendre. Chaque grain compte, chaque expérience construit une connaissance.</p><a class="btn" href="#sequences">Explorer les séquences →</a></div>
+<figure class="hourglass"><canvas id="sand-right" width="240" height="340" aria-hidden="true"></canvas><figcaption>02 / COMPRENDRE</figcaption></figure>
+</div><button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false">Mettre l’animation en pause</button>
+</header>
+<main id="sequences">
 <p class="section-label">CATALOGUE DES SÉQUENCES</p>
 <h2>Séquences pédagogiques</h2>
 <article class="sequence" aria-labelledby="sequence-3">
@@ -57,5 +71,70 @@ footer{border-top:2px dashed #b9ad99;padding:16px 0;font-size:12px;color:#594b3c
 <text x="20" y="242" fill="#bfc5ce" font-size="13" font-family="monospace">ANALOGIQUE → NUMÉRIQUE</text>
 </svg></div></article>
 </main>
-<footer><span>SKILLBEAM · LABORATOIRE PÉDAGOGIQUE</span><span>Accueil V1.5 · LAB 01 V27</span></footer>
+<footer><span>SKILLBEAM · LABORATOIRE PÉDAGOGIQUE</span><span>Accueil V1.6 · LAB 01 V27</span></footer>
+
+<script>
+(()=> {
+"use strict";
+const W=240,H=340,N=640,dropTime=.64,flow=31,drain=N/flow,turn=.85,hold=1.1,cycle=drain+dropTime+hold+turn;
+const reduced=matchMedia("(prefers-reduced-motion: reduce)");
+const sandColors=["#d48c31","#e3a042","#f6ad42","#ffcd77","#bb7629","#e9b65b"];
+function rng(seed){return ()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296}}
+function bulbHalf(y){if(y<42||y>298)return 0;const z=Math.abs(y-170);return Math.min(64,5+59*Math.pow(z/128,.67))}
+function makePile(seed,upper){
+ const rand=rng(seed),pts=[];
+ for(let y=upper?160:287;upper?y>=47:y>=180;y-=3.4){
+   const half=bulbHalf(y)-4;
+   for(let x=120-half;x<=120+half;x+=3.5){
+     const px=x+(rand()-.5)*1.5,py=y+(rand()-.5)*1.5;
+     // Lower pile has a central apex; upper chamber drains from its surface.
+     pts.push({x:px,y:py,c:sandColors[Math.floor(rand()*sandColors.length)],r:1.05+rand()*.65,order:upper?-py:-py+Math.abs(px-120)*.55});
+   }
+ }
+ pts.sort((a,b)=>a.order-b.order);return pts.slice(0,N);
+}
+const upper=makePile(12,true),lower=makePile(83,false);
+const glass=new Path2D("M 55 42 Q 40 77 63 111 Q 83 140 113 165 Q 120 170 113 175 Q 83 200 63 229 Q 40 263 55 298 L185 298 Q200 263 177 229 Q157 200 127 175 Q120 170 127 165 Q157 140 177 111 Q200 77 185 42 Z");
+function draw(ctx,t){
+ ctx.clearRect(0,0,W,H);ctx.save();ctx.translate(120,170);
+ const phase=t%cycle,number=Math.floor(t/cycle);
+ const rotation=phase>cycle-turn?Math.PI*Math.min(1,(phase-(cycle-turn))/turn):0;
+ // Rotate only at the end of each cycle, reset orientation while the glass is symmetric.
+ ctx.rotate(rotation);ctx.translate(-120,-170);
+ const frame=ctx.createLinearGradient(36,0,204,0);
+ frame.addColorStop(0,"#865b2a");frame.addColorStop(.24,"#f6ad42");frame.addColorStop(.5,"#ffd68a");frame.addColorStop(.76,"#bc7831");frame.addColorStop(1,"#63401f");
+ ctx.fillStyle=frame;ctx.strokeStyle="#f6ad42";ctx.lineWidth=1.5;
+ for(const y of [24,299]){ctx.beginPath();ctx.roundRect(35,y,170,17,4);ctx.fill();ctx.stroke();ctx.fillRect(50,y+5,140,2)}
+ for(const x of [44,196]){ctx.fillStyle=frame;ctx.fillRect(x-3,42,6,257)}
+ ctx.fillStyle="rgba(182,213,198,.065)";ctx.fill(glass);
+ ctx.save();ctx.clip(glass);
+ const released=Math.min(N,Math.floor(phase*flow)),arrived=Math.min(N,Math.max(0,Math.floor((phase-dropTime)*flow)));
+ function dot(p,x=p.x,y=p.y){ctx.beginPath();ctx.fillStyle=p.c;ctx.arc(x,y,p.r,0,Math.PI*2);ctx.fill()}
+ for(let i=0;i<N-released&&i<upper.length;i++)dot(upper[i]);
+ for(let i=0;i<arrived&&i<lower.length;i++)dot(lower[i]);
+ // Each released grain has its own trajectory, color and travel time.
+ for(let i=arrived;i<released;i++){
+   const age=phase-i/flow;
+   if(age<0||age>dropTime)continue;
+   const q=age/dropTime,target=lower[i]||{x:120,y:284};
+   const x=120+Math.sin(i*2.39+q*7)*1.5+(target.x-120)*Math.pow(q,4);
+   const y=169+(target.y-169)*q*q;
+   dot({x,y,c:sandColors[i%sandColors.length],r:1.25},x,y);
+ }
+ ctx.restore();
+ ctx.strokeStyle="#9fbdac";ctx.lineWidth=2;ctx.stroke(glass);
+ ctx.strokeStyle="rgba(233,250,237,.45)";ctx.lineWidth=2.5;
+ ctx.beginPath();ctx.moveTo(64,53);ctx.bezierCurveTo(53,91,79,119,99,143);ctx.moveTo(64,287);ctx.bezierCurveTo(53,251,79,222,99,197);ctx.stroke();
+ ctx.restore();
+}
+const canvases=["sand-left","sand-right"].map(id=>document.getElementById(id)).filter(Boolean);
+const contexts=canvases.map(c=>c.getContext("2d"));
+const button=document.getElementById("motion-toggle");let elapsed=0,previous=null,paused=reduced.matches;
+function render(){contexts.forEach((c,i)=>{if(c)draw(c,elapsed+(i?cycle*.42:0))})}
+function frame(now){if(previous!==null&&!paused&&!document.hidden)elapsed+=Math.min(.06,(now-previous)/1000);previous=now;if(!paused&&!document.hidden)render();requestAnimationFrame(frame)}
+function setPaused(value){paused=value;button.setAttribute("aria-pressed",String(paused));button.textContent=paused?"Reprendre l’animation":"Mettre l’animation en pause";render()}
+button.addEventListener("click",()=>setPaused(!paused));reduced.addEventListener("change",()=>setPaused(reduced.matches));
+render();requestAnimationFrame(frame);
+})();
+</script>
 </body></html>
