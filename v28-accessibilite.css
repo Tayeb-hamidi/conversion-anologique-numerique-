@@ -1,0 +1,30 @@
+/* V28 : typographie système lisible, aucun CDN. */
+:root{--v28-font:18px}
+body{font-family:Verdana,Arial,sans-serif;font-size:var(--v28-font);font-weight:500;line-height:1.6;letter-spacing:.015em}
+h1,h2,h3,h4,.hero,.sidebar,.checkpoint,.instrument,.scope,button,input,textarea,select{font-family:Verdana,Arial,sans-serif}
+h1,h2,h3,h4{font-weight:700;letter-spacing:0;line-height:1.35}
+label,button{font-weight:600}textarea{font-weight:500;line-height:1.6;min-height:110px}
+.sidebar a small,.note,.livret-figure figcaption,.tag,.eyebrow,.lab-source{font-size:.82rem;letter-spacing:.025em}
+body.v28-spaced{letter-spacing:.06em;word-spacing:.12em;line-height:1.85}
+math{border:0;background:transparent;padding:.1em .2em;font-size:1.16em;color:inherit}
+.v28-preview{border:2px solid #332b23;background:#fff3cf;margin:0 0 24px;padding:14px 18px;font-size:.95em}
+.v28-reading{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.v28-reading input[type=range]{width:150px}.v28-reading label{margin:0}
+.v28-panel{background:#fffdf6;border:2px solid #42734a;border-left-width:7px;margin:24px 0;padding:clamp(12px,2vw,24px)}
+.v28-panel h3{margin-top:0;color:#28582f}
+.v28-question{border-top:1px solid #c9baa5;padding:16px 0;margin:0}
+.v28-question legend{font-weight:700;padding:0 8px;max-width:100%;overflow-wrap:anywhere}
+.v28-tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.v28-tools button{font-size:.85em;margin:3px;padding:6px 9px}
+.v28-formula{background:#f7f3e9;padding:12px;margin:8px 0;border:1px solid #746657}
+.v28-formula label{font-size:.88em;margin:6px 0}.v28-formula input,.v28-formula select{display:block;width:100%;max-width:100%}
+.v28-formula math{display:block;text-align:center;margin:14px auto;font-size:1.3em}
+.v28-formula [hidden]{display:none}
+.v28-graph{background:#fffdf6;border:1px solid #746657;padding:12px;margin:10px 0}
+.v28-graph svg{display:block;background:#fffdf6;border:0;max-height:300px;touch-action:pan-y}
+.v28-graph label{font-size:.85em}.v28-graph output{display:block;font-weight:700;font-size:.85em}
+.v28-status{font-size:.9em;color:#28582f;min-height:1.5em}
+.v28-warning{color:#754020}
+@media(max-width:600px){.v28-reading{gap:7px}.v28-panel{padding:10px}.sidebar a{font-size:.82rem}.v28-tools button{font-size:.8em}.v28-question{min-width:0}}
+
+.v28-answer-math{display:flex;flex-wrap:wrap;gap:12px;padding:8px 0}.v28-answer-math[hidden]{display:none}.v28-answer-math math{background:#e7efdb;padding:.4em .65em}
