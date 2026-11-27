@@ -1,0 +1,22 @@
+name: V28 prototype
+on:
+  pull_request:
+    paths:
+      - 'v28-*'
+      - 'tests/test_v28.py'
+      - '.github/workflows/v28.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.57.0
+      - run: python -m playwright install --with-deps chromium
+      - run: node --check v28-bilan.js
+      - run: python tests/test_v28.py
