@@ -26,3 +26,5 @@ math{border:0;background:transparent;padding:.1em .2em;font-size:1.16em;color:in
 .v28-status{font-size:.9em;color:#28582f;min-height:1.5em}
 .v28-warning{color:#754020}
 @media(max-width:600px){.v28-reading{gap:7px}.v28-panel{padding:10px}.sidebar a{font-size:.82rem}.v28-tools button{font-size:.8em}.v28-question{min-width:0}}
+
+.v28-answer-math{display:flex;flex-wrap:wrap;gap:12px;padding:8px 0}.v28-answer-math[hidden]{display:none}.v28-answer-math math{background:#e7efdb;padding:.4em .65em}

@@ -84,9 +84,9 @@ function addFormula(container,target){
  const safe=v=>v.replace(/[\\{}$%#&]/g,'').trim();
  box.append(el('strong','Composer une formule'),mode,la,lb,preview,btn('Insérer la formule',()=>{const x=safe(a.value),y=safe(b.value);if(!x||(mode.value!=='root'&&!y))return;const m=mode.value,t=m==='frac'?'\\frac{'+x+'}{'+y+'}':m==='root'?'\\sqrt{'+x+'}':m==='power'?'{'+x+'}^{'+y+'}':'{'+x+'}_{'+y+'}';insert(' \\('+t+'\\) ')}));
  [mode,a,b].forEach(e=>e.addEventListener('input',update));update();
- const bar=el('div',undefined,'v28-tools');bar.append(btn('Formule mathématique',()=>{box.hidden=!box.hidden;if(!box.hidden)mode.focus()}));
+ const answerPreview=el('div',undefined,'v28-answer-math');answerPreview.setAttribute('aria-label','Aperçu des formules insérées');function renderAnswer(){answerPreview.replaceChildren();const re=/\\\(([^]*?)\\\)/g;for(const m of target.value.matchAll(re)){const v=m[1];const frac=v.match(/^\\frac\{([^{}]+)\}\{([^{}]+)\}$/),root=v.match(/^\\sqrt\{([^{}]+)\}$/),pow=v.match(/^\{([^{}]+)\}([_^])\{([^{}]+)\}$/);const math=mathNode('math');if(frac){const n=mathNode('mfrac');n.append(mathNode('mtext',frac[1]),mathNode('mtext',frac[2]));math.append(n)}else if(root){const n=mathNode('msqrt');n.append(mathNode('mtext',root[1]));math.append(n)}else if(pow){const n=mathNode(pow[2]==='^'?'msup':'msub');n.append(mathNode('mtext',pow[1]),mathNode('mtext',pow[3]));math.append(n)}else{continue}answerPreview.append(math)}answerPreview.hidden=!answerPreview.childNodes.length}target.addEventListener('input',renderAnswer);renderAnswer();const bar=el('div',undefined,'v28-tools');bar.append(btn('Formule mathématique',()=>{box.hidden=!box.hidden;if(!box.hidden)mode.focus()}));
  for(const symbol of ['Δ','×','÷','²','θ','µ','Ω','≈','≤','≥'])bar.append(btn(symbol,()=>insert(symbol)));
- container.append(bar,box);
+ container.append(bar,box,answerPreview);
 }
 const SVG='http://www.w3.org/2000/svg';
 function sv(tag,attrs={},txt){const n=document.createElementNS(SVG,tag);Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));if(txt!==undefined)n.textContent=txt;return n}
